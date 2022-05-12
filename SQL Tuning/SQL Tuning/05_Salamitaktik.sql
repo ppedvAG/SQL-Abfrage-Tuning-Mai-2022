@@ -1,7 +1,7 @@
 --Seiten (IO) --- weniger --> weniger CPU 
 					-- weniger RAM Auslastung 
 
-
+--part Sicht-------------
 
 select * from umsatz --von 2000 bis 2022
 
@@ -78,4 +78,132 @@ select * from umsatz
 
 --unhandlich: bei Änderungen (neues Jahr) .... neue Tabelle, neue Einschränkung auf Tabelle, View ändern, PK auf 2 Spalten
 
---geht auch besser:. rein physikalisch
+--geht auch besser:. rein physikalisch --> Partitionierung
+
+-------100------------200-----------------------------
+-- 1                 2                                3
+
+
+create function fxy (@zahl int) returuns int .. hätte gerne 100 Bereiche
+as
+begin
+	If @zahl <= 100 return 1
+	If @zahl > 200 return 1
+end
+
+
+create partition function fzahl(int) 
+as
+RANGE LEFT for values (100, 200)
+
+select $partition.fzahl(117)
+
+
+
+create table t2 (id int) ON HOT
+
+--bis100    bis200   rest bis5000
+
+
+create partition scheme schZahl
+as
+partition fzahl to (bis100,bis200, rest)
+---                                 1            2       3
+
+create table ptab (id int identity, nummer int, spx char(4100)) ON schZahl(nummer)
+
+
+declare @i as int = 1
+
+while @i <=20000
+begin
+		insert into ptab (nummer , spx) values (@i, 'XY')
+		set @i +=1 --set @i=@i +1 -- :-(      set @i= +1
+end
+
+--wieso geht die Schleife schneller als der GO 20000 .. 6 sek statt 10 sek
+--warum--- weil keine 20000 Batches!!
+
+
+--GO 20000 = 20000 Batches und 20000 Transaktion
+
+--while = 1 Batch .. schneller
+
+drop table ptab
+declare @i as int = 1
+begin tran
+while @i <=20000
+begin
+		insert into ptab (nummer , spx) values (@i, 'XY')
+		set @i +=1 --set @i=@i +1 -- :-(      set @i= +1
+end
+commit
+
+
+--hats was gebracht
+
+set statistics io, time on
+
+select * from ptab where id = 10-- weil 100 Seiten .... 100 log Lese
+
+select * from ptab where nummer = 1000 --Seek auf HEap--- 3 Haufen
+
+
+--Sperre auf Part möglich
+
+set statistics io, time on
+select * from ptab where nummer = 1000
+
+
+
+--Jahresweise
+create partition function fzahl(datetime)  --alles was sortierbar ist.. Tipp Grnzen sind harte Grenzen
+as
+RANGE LEFT for values ('31.12.2022 23:59:59.997','')
+
+--A bis M  --- N bis S ---  T bis Z
+create partition function fzahl(varchar(50))  --alles was sortierbar ist.. Tipp Grnzen sind harte Grenzen
+as
+RANGE LEFT for values ('N','T')
+
+--A----------------M--- Maier
+
+
+create partition scheme schZahl
+as
+partition fzahl ALL  to ([PRIMARY])--faktisch 15000 Teile machbar
+
+---GROUP BY 
+-- CTE
+
+select * from Employees
+
+--partition .. window function
+--ist sql sytax case sensitiv
+---GROUP BY 
+-- CTE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create partition scheme schZahl
+as
+partition fzahl to (bis100,bis200, rest)
+
+
+
+
+

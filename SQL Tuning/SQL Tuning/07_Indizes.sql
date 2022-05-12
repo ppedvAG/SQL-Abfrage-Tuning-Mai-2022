@@ -13,6 +13,8 @@ IX mit eingeschlossenen SP  = SELECT
 gefilterter Index --nur ein Teil indizieren, aber es sollten weniger Ebenen werden
 
 
+Columnstore IX   gr und nicht gr..
+
 
 
 
@@ -141,16 +143,37 @@ group by country, city
 
 --SCAN ..besser mit NIX_   CPU-Zeit = 312 ms, verstrichene Zeit = 44 ms.  5700 Seiten
 
-
+set statistics io, time on
 select country, city, count(*)
 from ku1
-where quantity > 10
+where unitprice < 5
 group by country, city
 
 ---ähh???? 0 ms 2 ms Dauer ..keine Lesevorgänge
 
 --stimmts ja oder nein.. ist die wirklich 3,5MB groß-- japp es stimmt
+
+
+select * from archiv where sp like '%xyz'
+
+
+
+
+
+
+
+
 -- und es kommen nur 3,5 MB in RAM un dnich tmehr 450MB
 
 --Grund .. wieso so klein: komprimiert
+
+--normale Kompression (Seite oder Zeilen) .... ca 40 - 60%   Zahlen weniger gut komprimierbar als text Daten
+
+--was passiert, wenn man komprimierte Tabellen abfragt?
+--Tabelle von 1000 Seiten auf 500 Seiten -- was beim Table SCAN
+--Dauer :  beides    CPU : höher    Seiten :  runter  RAM : runter
+--> wegen den anderen
+
+
+--COLUMNSTORE
 
