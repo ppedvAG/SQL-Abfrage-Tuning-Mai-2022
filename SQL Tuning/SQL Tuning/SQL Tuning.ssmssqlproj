@@ -73,11 +73,29 @@
           <AssociatedConnUserName />
           <FullPath>08_Sperren.sql</FullPath>
         </FileNode>
+        <FileNode Name="40_CTE.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KAIRO:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>KAIRO</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>40_CTE.sql</FullPath>
+        </FileNode>
         <FileNode Name="Tag1.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KAIRO:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>KAIRO</AssociatedConnSrvName>
           <AssociatedConnUserName />
           <FullPath>Tag1.sql</FullPath>
+        </FileNode>
+        <FileNode Name="WindowFunction.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KAIRO:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>KAIRO</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>WindowFunction.sql</FullPath>
+        </FileNode>
+        <FileNode Name="Z_Pläne im RAM.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:KAIRO:True</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>KAIRO</AssociatedConnSrvName>
+          <AssociatedConnUserName />
+          <FullPath>Z_Pläne im RAM.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>
